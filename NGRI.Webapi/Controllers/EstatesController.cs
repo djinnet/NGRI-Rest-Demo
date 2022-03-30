@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using NGRI.Library.Interfaces;
 using NGRI.Library.Model;
 using NGRI.Webapi.Data;
+using Microsoft.Extensions.Logging;
 
 namespace NGRI.Webapi.Controllers
 {
@@ -20,53 +21,88 @@ namespace NGRI.Webapi.Controllers
     public class EstatesController : ControllerBase
     {
         private readonly IEstateService _estateService;
-
-        public EstatesController(IEstateService service)
+        private readonly ILogger<EstatesController> logger;
+        
+        public EstatesController(IEstateService service, ILogger<EstatesController> logger)
         {
             _estateService = service;
+            this.logger = logger;
         }
 
         // GET: api/Estates
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Estate>>> GetEstate()
         {
-            return await _estateService.GetAllEstates();
+            try
+            {
+                return await _estateService.GetAllEstates();
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
         }
 
         // GET: api/Estates/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Estate>> GetEstate(int id)
         {
-            var estate = await _estateService.GetEstateById(id);
-
-            if (estate == null)
+            try
             {
-                return NotFound();
-            }
+                var estate = await _estateService.GetEstateById(id);
 
-            return estate;
+                if (estate == null)
+                {
+                    return NotFound();
+                }
+
+                return estate;
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
+            
         }
 
         // POST: api/Estates
         [HttpPost]
         public async Task<ActionResult<Estate>> PostEstate(Estate estate)
         {
-            var result = await _estateService.CreateIfExistsOrUpdateEstate(estate);
+            try
+            {
+                var result = await _estateService.CreateIfExistsOrUpdateEstate(estate);
 
-            return CreatedAtAction("GetEstate", new { id = result.Id }, result);
+                return CreatedAtAction("GetEstate", new { id = result.Id }, result);
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
         }
 
         // DELETE: api/Estates/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEstate(int id)
         {
-            var estate = await _estateService.DeleteEstate(id);
-            if (estate == null)
+            try
             {
-                return NotFound();
-            }
+                var estate = await _estateService.DeleteEstate(id);
+                if (estate == null)
+                {
+                    return NotFound();
+                }
 
-            return NoContent();
+                return NoContent();
+            }
+            catch (Exception e)
+            {
+                this.logger.LogError(e.Message);
+                return BadRequest(e.Message);
+            }
         }
     }
 }
