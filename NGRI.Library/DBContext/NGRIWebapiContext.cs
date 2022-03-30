@@ -11,9 +11,18 @@ namespace NGRI.Webapi.Data
     public class NGRIWebapiContext : DbContext
     {
         public string DbPath { get; }
+        private static bool _created = false;
         
         public NGRIWebapiContext (DbContextOptions<NGRIWebapiContext> options): base(options)
         {
+
+            if (!_created)
+            {
+                _created = true;
+                Database.EnsureDeleted();
+                Database.EnsureCreated();
+            }
+            
             var folder = Environment.SpecialFolder.LocalApplicationData;
             var path = Environment.GetFolderPath(folder);
             DbPath = System.IO.Path.Join(path, "Ngri.db");
