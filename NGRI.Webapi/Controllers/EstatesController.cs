@@ -12,6 +12,9 @@ using NGRI.Webapi.Data;
 
 namespace NGRI.Webapi.Controllers
 {
+    /*
+     * This is the controller for the Estate entity.
+     */
     [Route("api/[controller]")]
     [ApiController]
     public class EstatesController : ControllerBase
@@ -45,7 +48,6 @@ namespace NGRI.Webapi.Controllers
         }
 
         // POST: api/Estates
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<Estate>> PostEstate(Estate estate)
         {

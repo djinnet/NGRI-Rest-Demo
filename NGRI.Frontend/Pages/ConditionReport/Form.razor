@@ -1,0 +1,57 @@
+﻿
+@if(ConditionReport == null){
+    <p>Cannot find ConditionReport.</p>   
+}else{
+<EditForm Model="@ConditionReport" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+     <div class="form-group">
+        <label>The address of the estate :</label>
+        <div>
+                @if(ConditionReport.Estate == null)
+                {
+                    <p>Cannot find estate</p>
+                }else{
+                    <p>@ConditionReport.Estate.Address</p>
+                }
+        </div>
+    </div>
+    <div class="form-group">
+        <label>Name :</label>
+        <div>
+            <InputText @bind-Value="@ConditionReport.Name" />
+            <ValidationMessage For="@(() => ConditionReport.Name)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>How many buildings :</label>
+            <div>
+                <InputNumber @bind-Value="@ConditionReport.Buildings" />
+                <ValidationMessage For="@(() => ConditionReport.Buildings)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>How many damages can be found in the buildings :</label>
+            <div>
+                <InputNumber @bind-Value="@ConditionReport.Damages" />
+                <ValidationMessage For="@(() => ConditionReport.Damages)" />
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+
+</EditForm>
+}
+
+
+@code {
+    [Parameter] public ConditionReport? ConditionReport { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}

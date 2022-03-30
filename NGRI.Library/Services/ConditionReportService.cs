@@ -37,6 +37,7 @@ namespace NGRI.Library.Services
             if (ConditionReportDb == null)
             {
                 _context.ConditionReports.Add(conditionReport);
+                _context.Estates.Attach(conditionReport.Estate);
             }
             else
             {
@@ -67,6 +68,16 @@ namespace NGRI.Library.Services
         public async Task<ConditionReport> GetConditionReport(int id)
         {
             return await _context.ConditionReports.FindAsync(id);
+        }
+
+        public async Task<List<ConditionReport>> GetReportsFromEstateID(int id)
+        {
+            //get estate from id
+            var estate = await _context.Estates.FindAsync(id);
+            //get all reports from estate
+            var reports = await _context.ConditionReports.Where(r => r.Estate == estate).ToListAsync();
+            //return reports
+            return reports;
         }
 
         public async Task<ConditionReport> UpdateConditionReport(ConditionReport conditionReport)

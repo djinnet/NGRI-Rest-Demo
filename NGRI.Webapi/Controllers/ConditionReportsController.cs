@@ -12,6 +12,9 @@ using NGRI.Webapi.Data;
 
 namespace NGRI.Webapi.Controllers
 {
+    /*
+     * This is the controller for condition report entity.
+     */
     [Route("api/[controller]")]
     [ApiController]
     public class ConditionReportsController : ControllerBase
@@ -44,8 +47,21 @@ namespace NGRI.Webapi.Controllers
             return conditionReport;
         }
 
+        // Get: api/GetReportsFromEstateID/5
+        [HttpGet("GetReportsFromEstateID/{id}")]
+        public async Task<ActionResult<IEnumerable<ConditionReport>>> GetReportsFromEstateID(int id)
+        {
+            var conditionReports = await _conditionReportService.GetReportsFromEstateID(id);
+
+            if (conditionReports == null)
+            {
+                return NotFound();
+            }
+
+            return conditionReports;
+        }
+
         // POST: api/ConditionReports
-        // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
         public async Task<ActionResult<ConditionReport>> PostConditionReport(ConditionReport conditionReport)
         {

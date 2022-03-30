@@ -22,7 +22,7 @@ namespace NGRI.Library.Services
         // This method is used to get all the estates from the database.
         public async Task<List<Estate>> GetAllEstates()
         {
-            return await _context.Estates.ToListAsync();
+            return await _context.Estates.Include(i => i.ConditionReports).ToListAsync();
         }
 
         // This method is used to get an estate by its id.

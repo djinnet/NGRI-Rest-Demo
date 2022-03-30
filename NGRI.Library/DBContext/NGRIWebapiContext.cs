@@ -30,6 +30,8 @@ namespace NGRI.Webapi.Data
 
         public DbSet<ConditionReport> ConditionReports { get; set; }
 
+
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Estate>().HasKey(e => e.Id);

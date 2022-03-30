@@ -1,0 +1,26 @@
+﻿@page "/estate/edit/{id}"
+@inject HttpClient http
+@inject NavigationManager uriHelper
+@inject IJSRuntime js
+
+<h3>Edit</h3>
+
+<Form ButtonText="Update" estate="estate" OnValidSubmit="@EditEstate" />
+
+@code {
+    [Parameter] public string id { get; set; }
+    Estate estate = new Estate();
+    
+    protected async override Task OnParametersSetAsync()
+    {
+        estate = await http.GetFromJsonAsync<Estate>($"https://localhost:7046/api/Estates/{int.Parse(id)}");
+    }
+
+    async Task EditEstate()
+    {
+        await http.PutAsJsonAsync("https://localhost:7046/api/Estates", estate);
+        await js.InvokeVoidAsync("alert", $"Updated Successfully!");
+        uriHelper.NavigateTo("estateoverview");
+
+    }
+}
