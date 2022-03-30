@@ -1,5 +1,5 @@
 ﻿@page "/estateoverview"
-@inject HttpClient Http
+@inject ICustomHttpClient Http
 @inject IJSRuntime js
 
 <PageTitle>Estate overview</PageTitle>
@@ -53,15 +53,16 @@ else
 
     protected override async Task OnInitializedAsync()
     {
-        estates = await Http.GetFromJsonAsync<Estate[]>("https://localhost:7046/api/Estates");
+        estates = await Http.GetEstatesAsync();
     }
-    
+
     async Task Delete(int id)
     {
+        if (estates == null) return;
         var estate = estates.First(x => x.Id == id);
         if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {estate.Address}'s ({estate.Id}) Record?"))
         {
-            await Http.DeleteAsync($"https://localhost:7046/api/Estates/{id}");
+            await Http.DeleteEstateAsync(id);
             await OnInitializedAsync();
         }
     }

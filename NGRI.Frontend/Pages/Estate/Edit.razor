@@ -1,5 +1,5 @@
 ﻿@page "/estate/edit/{id}"
-@inject HttpClient http
+@inject ICustomHttpClient http
 @inject NavigationManager uriHelper
 @inject IJSRuntime js
 
@@ -13,14 +13,13 @@
     
     protected async override Task OnParametersSetAsync()
     {
-        estate = await http.GetFromJsonAsync<Estate>($"https://localhost:7046/api/Estates/{int.Parse(id)}");
+        estate = await http.GetEstateAsync(int.Parse(id));
     }
 
     async Task EditEstate()
     {
-        await http.PutAsJsonAsync("https://localhost:7046/api/Estates", estate);
+        await http.UpdateEstateAsync(estate);
         await js.InvokeVoidAsync("alert", $"Updated Successfully!");
         uriHelper.NavigateTo("estateoverview");
-
     }
 }

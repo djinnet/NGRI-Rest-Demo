@@ -1,5 +1,5 @@
 ﻿@page "/estate/create"
-@inject HttpClient http
+@inject ICustomHttpClient http
 @inject NavigationManager uriHelper
 
 <h3>Create</h3>
@@ -10,7 +10,7 @@
     Estate estate = new Estate();
     async Task CreateEstate()
     {
-        await http.PostAsJsonAsync("https://localhost:7046/api/Estates", estate);
+        await http.CreateEstateAsync(estate);
         uriHelper.NavigateTo("estateoverview");
     }
 }

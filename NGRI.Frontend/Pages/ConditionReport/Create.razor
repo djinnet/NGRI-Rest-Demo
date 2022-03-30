@@ -1,5 +1,5 @@
 ﻿@page "/conditionreport/create/{id}"
-@inject HttpClient http
+@inject ICustomHttpClient http
 @inject NavigationManager uriHelper
 
 <h3>Create</h3>
@@ -16,9 +16,9 @@
 
     async Task CreateReport()
     {
-        Estate = await http.GetFromJsonAsync<Estate>($"https://localhost:7046/api/Estates/{int.Parse(id)}");
+        Estate = await http.GetEstateAsync(int.Parse(id));
         CR.Estate = Estate;
-        await http.PostAsJsonAsync("https://localhost:7046/api/ConditionReports", CR);
+        await http.CreateReportAsync(CR);
         uriHelper.NavigateTo("estateoverview");
     }
 }

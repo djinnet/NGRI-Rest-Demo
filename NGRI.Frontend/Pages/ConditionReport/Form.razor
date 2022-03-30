@@ -5,17 +5,6 @@
 <EditForm Model="@ConditionReport" OnValidSubmit="@OnValidSubmit">
     <DataAnnotationsValidator />
     <ValidationSummary />
-     <div class="form-group">
-        <label>The address of the estate :</label>
-        <div>
-                @if(ConditionReport.Estate == null)
-                {
-                    <p>Cannot find estate</p>
-                }else{
-                    <p>@ConditionReport.Estate.Address</p>
-                }
-        </div>
-    </div>
     <div class="form-group">
         <label>Name :</label>
         <div>
