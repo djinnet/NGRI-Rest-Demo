@@ -13,6 +13,8 @@ namespace NGRI.Webapi.Data
         public string DbPath { get; }
         private static bool _created = false;
         
+        private static bool _created = false;
+
         public NGRIWebapiContext (DbContextOptions<NGRIWebapiContext> options): base(options)
         {
 
