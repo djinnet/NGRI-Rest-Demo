@@ -20,7 +20,7 @@ namespace NGRI.Library.Model
         // the damages of the report
         public int Damages { get; set; } = 0;
 
-        // the date of the report
+        // the date of the report - this field is not used in the application and is only for the database
         public DateTime Date { get; set; } = DateTime.Now;
 
         // the estate connected to the report

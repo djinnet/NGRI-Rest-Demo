@@ -1,0 +1,16 @@
+﻿@page "/estate/create"
+@inject ICustomHttpClient http
+@inject NavigationManager uriHelper
+
+<h3>Create</h3>
+
+<Form ButtonText="Create Estate" estate="@estate" OnValidSubmit="@CreateEstate" />
+            
+@code {
+    Estate estate = new Estate();
+    async Task CreateEstate()
+    {
+        await http.CreateEstateAsync(estate);
+        uriHelper.NavigateTo("estateoverview");
+    }
+}

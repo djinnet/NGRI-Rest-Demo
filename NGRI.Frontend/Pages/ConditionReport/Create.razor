@@ -1,0 +1,24 @@
+﻿@page "/conditionreport/create/{id}"
+@inject ICustomHttpClient http
+@inject NavigationManager uriHelper
+
+<h3>Create</h3>
+
+<Form ButtonText="Create Report" ConditionReport="@CR" OnValidSubmit="@CreateReport" />
+            
+@code {
+
+    [Parameter] public string id { get; set; }
+    
+    public Estate? Estate { get; set; }
+    
+    ConditionReport CR = new ConditionReport();
+
+    async Task CreateReport()
+    {
+        Estate = await http.GetEstateAsync(int.Parse(id));
+        CR.Estate = Estate;
+        await http.CreateReportAsync(CR);
+        uriHelper.NavigateTo("estateoverview");
+    }
+}

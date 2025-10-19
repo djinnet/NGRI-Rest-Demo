@@ -1,0 +1,81 @@
+﻿@page "/reportoverview/{id}"
+@inject ICustomHttpClient Http
+@inject IJSRuntime js
+
+<PageTitle>Condition Report for the estate overview</PageTitle>
+
+@if (Estate == null)
+{
+    <div>
+        <h1>Estate not found</h1>
+        <p>The estate with the id {id} could not be found.</p>
+    </div>
+}else{
+    <h1>Condition Report for the estate @Estate.Address overview</h1>
+    
+    <div class="form-group">
+        <a class="btn btn-success" href="conditionreport/create/@Estate.Id">Create condition report</a>
+    </div>
+
+    <div class="form-group">
+        <a class="btn btn-primary" href="estateoverview">Back</a>
+    </div>
+
+    @if (ConditionReports == null)
+    {
+        <p><em>Loading...</em></p>
+    }
+    else
+    {
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Buildings</th>
+                    <th>Damages</th>
+                    <th>The date of creation of the report</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in ConditionReports)
+                {
+                    <tr>
+                        <td>@report.Name</td>
+                        <td>@report.Buildings</td>
+                        <td>@report.Damages</td>
+                        <td>@report.Date.ToString("dd-MM-yyyy")</td>
+                         <td>
+                            <button class="btn btn-danger" @onclick="@(() => Delete(report.Id))">Delete</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+}
+
+
+@code {
+    [Parameter] public string id { get; set; }
+    private ConditionReport[]? ConditionReports;
+    private Estate? Estate = new Estate();
+
+    protected override async Task OnInitializedAsync()
+    {
+        ConditionReports = await Http.GetReportsFromEstateID(int.Parse(id));
+        Estate = await Http.GetEstateAsync(int.Parse(id));
+    }
+
+    async Task Delete(int id)
+    {
+        if (ConditionReports == null) return;
+
+        var report = ConditionReports.First(x => x.Id == id);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {report.Name}'s ({report.Id}) Record?"))
+        {
+            await Http.DeleteReportAsync(report.Id);
+            await OnInitializedAsync();
+        }
+    }
+}

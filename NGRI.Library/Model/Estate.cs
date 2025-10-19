@@ -17,18 +17,20 @@ namespace NGRI.Library.Model
         public int Id { get; set; }
 
         //the address of the estate
+        [Required]
         public string Address { get; set; } = "";
 
         //the city of the estate
+        [Required]
         public string City { get; set; } = "";
 
         //the country of the estate
         public string Country { get; set; } = "";
 
         //the postal code of the estate
-        public string PostalCode { get; set; } = "";
+        public int PostalCode { get; set; }
 
         //the list of condition reports
-        public ICollection<ConditionReport> ConditionReports { get; set; }
+        public ICollection<ConditionReport> ConditionReports { get; set; } = new List<ConditionReport>();
     }
 }

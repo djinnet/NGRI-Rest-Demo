@@ -1,0 +1,69 @@
+﻿@page "/estateoverview"
+@inject ICustomHttpClient Http
+@inject IJSRuntime js
+
+<PageTitle>Estate overview</PageTitle>
+
+<h1>Estate overview</h1>
+
+<div class="form-group">
+    <a class="btn btn-success" href="estate/create"><i class="oi oi-plus"></i> Create New</a>
+</div>
+
+@if (estates == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Address</th>
+                <th>City</th>
+                <th>Country</th>
+                <th>PostalCode</th>
+                <th>Amount of Condition Reports</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var estate in estates)
+            {
+                <tr>
+                    <td>@estate.Address</td>
+                    <td>@estate.City</td>
+                    <td>@estate.Country</td>
+                    <td>@estate.PostalCode</td>
+                    <td>@estate.ConditionReports.Count</td>
+                     <td>
+                        <a class="btn btn-success" href="conditionreport/create/@estate.Id">Create condition report</a>
+                        <a class="btn btn-success" href="reportoverview/@estate.Id">View condition reports</a>
+                        <a class="btn btn-success" href="estate/edit/@estate.Id">Edit</a>
+                        <button class="btn btn-danger" @onclick="@(() => Delete(estate.Id))">Delete</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    private Estate[]? estates;
+
+    protected override async Task OnInitializedAsync()
+    {
+        estates = await Http.GetEstatesAsync();
+    }
+
+    async Task Delete(int id)
+    {
+        if (estates == null) return;
+        var estate = estates.First(x => x.Id == id);
+        if (await js.InvokeAsync<bool>("confirm", $"Do you want to delete {estate.Address}'s ({estate.Id}) Record?"))
+        {
+            await Http.DeleteEstateAsync(id);
+            await OnInitializedAsync();
+        }
+    }
+}

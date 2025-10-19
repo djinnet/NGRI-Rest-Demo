@@ -1,0 +1,55 @@
+﻿
+@if(estate == null){
+    <p>Cannot find estate.</p>   
+}else{
+<EditForm Model="@estate" OnValidSubmit="@OnValidSubmit">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label>Address :</label>
+        <div>
+            <InputText @bind-Value="@estate.Address" />
+            <ValidationMessage For="@(() => estate.Address)" />
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>City :</label>
+            <div>
+                <InputText @bind-Value="@estate.City" />
+                <ValidationMessage For="@(() => estate.City)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Country :</label>
+            <div>
+                <InputText @bind-Value="@estate.Country" />
+                <ValidationMessage For="@(() => estate.Country)" />
+            </div>
+        </div>
+    </div>
+    <div class="form-group ">
+        <div>
+            <label>Postal Code :</label>
+            <div>
+                <InputNumber @bind-Value="@estate.PostalCode" />
+                <ValidationMessage For="@(() => estate.PostalCode)" />
+            </div>
+        </div>
+    </div>
+
+    <button type="submit" class="btn btn-success">
+        @ButtonText
+    </button>
+
+</EditForm>
+}
+
+
+@code {
+    [Parameter] public Estate? estate { get; set; }
+    [Parameter] public string ButtonText { get; set; } = "Save";
+    [Parameter] public EventCallback OnValidSubmit { get; set; }
+}
